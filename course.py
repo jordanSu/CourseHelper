@@ -39,14 +39,14 @@ if __name__ == "__main__":
                 thisRemain = re.findall('.+>(.+)', content[i+9])[0]
                 remainList.append(thisRemain)
 
-                if len(thisName) > maxLength:
-                    maxLength = len(thisName)
+                if len(thisName.decode("utf8")) > maxLength:
+                    maxLength = len(thisName.decode("utf8"))
         print(maxLength)
-        for j in range(0, 10):   #To print every course in the list
+        for j in range(0, len(nameList)):   #To print every course in the list
             space = []
 
-            for k in range(0, maxLength+4 - len(nameList[j])):
-                space.append(' ')
+            for k in range(0, maxLength+2 - len(nameList[j].decode("utf8"))):
+                space.append('  ')
             space = "".join(space)
 
-            print(nameList[j].decode("utf8"), space, remainList[j])
+            print(nameList[j].decode("utf8"), space, remainList[j].decode("utf8"))
