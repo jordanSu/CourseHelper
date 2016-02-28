@@ -44,9 +44,12 @@ if __name__ == "__main__":
         print(maxLength)
         for j in range(0, len(nameList)):   #To print every course in the list
             space = []
+            engCharSub = re.findall('[a-zA-Z]', nameList[j])
 
             for k in range(0, maxLength+2 - len(nameList[j].decode("utf8"))):
                 space.append('  ')
+            for l in range(0, len(engCharSub)):
+                space.append(' ')
             space = "".join(space)
 
             print(nameList[j].decode("utf8"), space, remainList[j].decode("utf8"))
