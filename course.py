@@ -2,14 +2,18 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
-import urllib
 import re
 import sys
-
+if sys.version_info < (3,2):
+    import urllib
+else:
+    import urllib.request as urllib
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
-        ans = raw_input("系所代碼: ")
+        try: input = raw_input
+        except NameError: pass
+        ans = input("系所代碼: ")
     else:
         ans = sys.argv[1]
 
@@ -24,6 +28,7 @@ if __name__ == "__main__":
     if "查無課程資訊" in data:    # maybe the DeptNo. is wrong
         print("查無課程資訊，請檢查課程代號是否正確！")
     else:
+        print(type(data))
         content = re.findall("<TD(.+?)</TD>", data)
         """
         for i in range(0, len(content)):
@@ -53,3 +58,4 @@ if __name__ == "__main__":
             space = "".join(space)
 
             print(nameList[j].decode("utf8"), space, remainList[j].decode("utf8"))
+            print("-----------------------------------------------")
