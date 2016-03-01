@@ -17,14 +17,14 @@ if __name__ == "__main__":
             input = raw_input
         ans = input("系所代碼: ")
     else:
-        ans = "F7" #sys.argv[1]
+        ans = sys.argv[1]   # get the argument from command line
 
     url = "http://course-query.acad.ncku.edu.tw/qry/qry001.php?dept_no=" + ans
 
     try:
         data = urllib.urlopen(url).read()   # Parse the raw data
         if isPython3 is True:
-            data = data.decode()
+            data = data.decode()    # 'bytes' -> u'str'
     except IOError:
         print("連線錯誤!!!")
         exit()
@@ -38,8 +38,11 @@ if __name__ == "__main__":
         remainList = []
         for i in range(0, len(content)):
             if "<a href" in content[i]:     # encounter a mark to locate each course
+                # parse the course name and put it into list
                 thisName = re.findall('.+">(.+?)</a>', content[i+4])[0]
                 nameList.append(thisName)
+
+                # parse the course remain and put it into list
                 thisRemain = re.findall('.+>(.+)', content[i+9])[0]
                 remainList.append(thisRemain)
 
@@ -52,8 +55,11 @@ if __name__ == "__main__":
                         maxLength = len(thisName.decode("utf8"))
 
         for j in range(0, len(nameList)):   #To print every course in the list
-            space = []
+            space = []  # add space to make pretty column print
+
+            # searching for english character since it's width is 1
             engCharSub = re.findall('[a-zA-Z]', nameList[j])
+
             for l in range(0, len(engCharSub)):
                 space.append(' ')
 
@@ -66,5 +72,6 @@ if __name__ == "__main__":
                 for k in range(0, maxLength+2 - len(nameList[j].decode("utf8"))):
                     space.append('  ')
                 space = "".join(space)
-                print(nameList[j].decode("utf8"), space, remainList[j].decode("utf8"))      
+                print(nameList[j].decode("utf8"), space, remainList[j].decode("utf8"))
+
             print("-----------------------------------------------")
