@@ -33,14 +33,30 @@ if __name__ == "__main__":
         print("查無課程資訊，請檢查課程代號是否正確！")
     else:
         content = re.findall("<TD(.+?)</TD>", data)
+
+        #for info in content:
+        #    print(info)
         maxLength = 0
         nameList = []
+        deptList = []
+        noList = []
         remainList = []
         for i in range(0, len(content)):
             if "<a href" in content[i]:     # encounter a mark to locate each course
                 # parse the course name and put it into list
                 thisName = re.findall('.+">(.+?)</a>', content[i+4])[0]
                 nameList.append(thisName)
+
+                # parse the course No and put it into list
+                if i-5 > 0:
+                    try:
+                        thisDept = re.findall('.+>(.+)', content[i-5])[0]
+                        thisNo = re.findall('.+>(\d+)', content[i-4])[0]
+                    except IndexError:
+                        thisDept = "  "
+                        thisNo = "   "
+                    deptList.append(thisDept)
+                    noList.append(thisNo)
 
                 # parse the course remain and put it into list
                 thisRemain = re.findall('.+>(.+)', content[i+9])[0]
@@ -67,11 +83,11 @@ if __name__ == "__main__":
                 for k in range(0, maxLength+2 - len(nameList[j])):
                     space.append('  ')
                 space = "".join(space)
-                print(nameList[j], space, remainList[j])
+                print(deptList[j], noList[j], nameList[j], space, remainList[j])
             else:
                 for k in range(0, maxLength+2 - len(nameList[j].decode("utf8"))):
                     space.append('  ')
                 space = "".join(space)
-                print(nameList[j].decode("utf8"), space, remainList[j].decode("utf8"))
+                print(deptList[j], noList[j], nameList[j].decode("utf8"), space, remainList[j].decode("utf8"))
 
             print("-----------------------------------------------")
