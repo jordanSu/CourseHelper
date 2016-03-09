@@ -12,14 +12,20 @@ else:
     isPython3 = True
 
 if __name__ == "__main__":
+    courseNo = ""
     if len(sys.argv) == 1:
         if isPython3 is not True:
             input = raw_input
         ans = input("系所代碼: ")
+        courseNo = input("課程代碼(不指定課程請留空白): ")
     else:
         ans = sys.argv[1]   # get the argument from command line
 
     url = "http://course-query.acad.ncku.edu.tw/qry/qry001.php?dept_no=" + ans
+
+
+    if len(sys.argv) == 3:
+        courseNo = sys.argv[2]
 
     try:
         data = urllib.urlopen(url).read()   # Parse the raw data
@@ -33,9 +39,6 @@ if __name__ == "__main__":
         print("查無課程資訊，請檢查課程代號是否正確！")
     else:
         content = re.findall("<TD(.+?)</TD>", data)
-
-        #for info in content:
-        #    print(info)
         maxLength = 0
         nameList = []
         deptList = []
@@ -48,19 +51,24 @@ if __name__ == "__main__":
                 nameList.append(thisName)
 
                 # parse the course No and put it into list
-                if i-5 > 0:
-                    try:
-                        thisDept = re.findall('.+>(.+)', content[i-5])[0]
-                        thisNo = re.findall('.+>(\d+)', content[i-4])[0]
-                    except IndexError:
-                        thisDept = "  "
-                        thisNo = "   "
-                    deptList.append(thisDept)
-                    noList.append(thisNo)
+                try:
+                    thisDept = re.findall('.+>(.+)', content[i-5])[0]
+                    thisNo = re.findall('.+>(\d+)', content[i-4])[0]
+                except IndexError:
+                    thisDept = "  "
+                    thisNo = "   "
+                deptList.append(thisDept)
+                noList.append(thisNo)
 
                 # parse the course remain and put it into list
                 thisRemain = re.findall('.+>(.+)', content[i+9])[0]
                 remainList.append(thisRemain)
+
+                if courseNo != "" and thisDept == ans and thisNo == courseNo:
+                    print("----------------------------------------------")
+                    print(thisDept, thisNo, thisName, thisRemain.rjust(5))
+                    print("----------------------------------------------")
+                    exit()
 
                 # To find the maxLength
                 if isPython3 is True:
@@ -69,7 +77,6 @@ if __name__ == "__main__":
                 else:
                     if len(thisName.decode("utf8")) > maxLength:
                         maxLength = len(thisName.decode("utf8"))
-
         for j in range(0, len(nameList)):   #To print every course in the list
             space = []  # add space to make pretty column print
 
@@ -91,3 +98,5 @@ if __name__ == "__main__":
                 print(deptList[j], noList[j], nameList[j].decode("utf8"), space, remainList[j].decode("utf8"))
 
             print("-----------------------------------------------")
+        if courseNo != "":
+            print("Result not found!!!\nDisplay all the course in", ans, "\n")
