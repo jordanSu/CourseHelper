@@ -12,20 +12,33 @@ else:
     isPython3 = True
 
 if __name__ == "__main__":
+    sYear = ""
+    sem = ""
     courseNo = ""
     if len(sys.argv) == 1:
         if isPython3 is not True:
             input = raw_input
         ans = input("系所代碼: ")
         courseNo = input("課程代碼(不指定課程請留空白): ")
+        if courseNo == "":
+            sYear = input("學年(本學年請留空白): ")
+            sem = input("學期(本學期請留空白): ")
     else:
         ans = sys.argv[1]   # get the argument from command line
 
-    url = "http://course-query.acad.ncku.edu.tw/qry/qry001.php?dept_no=" + ans
-
-
     if len(sys.argv) == 3:
         courseNo = sys.argv[2]
+
+    if len(sys.argv) == 4:
+        sYear = sys.argv[2]
+        sem = sys.argv[3]
+
+    if sYear == "" and sem == "":
+        url = "http://course-query.acad.ncku.edu.tw/qry/qry001.php?dept_no=" + ans
+    else:
+        url = "http://course-query.acad.ncku.edu.tw/qry/qry002.php?dept_no=" + ans
+        url = url + "&syear=0" + sYear
+        url = url + "&sem=" + sem
 
     try:
         data = urllib.urlopen(url).read()   # Parse the raw data
@@ -66,7 +79,7 @@ if __name__ == "__main__":
 
                 if courseNo != "" and thisDept == ans and thisNo == courseNo:
                     print("----------------------------------------------")
-                    print(thisDept, thisNo, thisName, thisRemain.rjust(5))
+                    print(thisDept, thisNo, thisName, thisRemain.rjust(10))
                     print("----------------------------------------------")
                     exit()
 
@@ -77,6 +90,7 @@ if __name__ == "__main__":
                 else:
                     if len(thisName.decode("utf8")) > maxLength:
                         maxLength = len(thisName.decode("utf8"))
+        print("-----------------------------------------------")
         for j in range(0, len(nameList)):   #To print every course in the list
             space = []  # add space to make pretty column print
 
