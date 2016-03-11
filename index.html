@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="main.js"></script>
+</head>
+<body>
+    系所代號：<input id="deptNo" type="text" size="5" maxlength="2" />
+    課程代碼：<input id="courseNo" type="text" size="5" maxlength="3" onchange="change()"/>
+    <span style="padding-left:1em">
+        學年：<select id="semYear">
+        <option>104</option>
+        <option>103</option>
+        <option>102</option>
+        <option>101</option>
+        <option>100</option>
+        </select>
+    </span>
+    學期：<select id="semester">
+        <option>1</option>
+        <option>2</option>
+        </select>
+    <input type="button" value="送出" onclick="search()" />
+    <input type="button" value="顯示本學期課表" onclick="search()" />
+    <div id="display" style="width:100%; height:100%"></div>
+
+</body>
+</html>
